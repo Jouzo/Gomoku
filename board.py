@@ -1,32 +1,7 @@
 import pygame
-
-SIZE = 820
-SQUARE_SIZE = SIZE // 20
-HALF_SQUARE = SQUARE_SIZE // 2
-BOARD_SIZE = (SIZE, SIZE)
-STONE_SIZE = SIZE // 23
-BACKGROUND = 'img/goban.jpg'
-STONES = ["img/white_stone.png", "img/black_stone.png"]
-
-def get_ajusted_position(coordinates, pos):
-    x, y = 0, 0
-    pos = (pos[0] - HALF_SQUARE, pos[1] - HALF_SQUARE)
-    if pos[0] > coordinates[17]:
-        x = 18
-    if pos[1] > coordinates[17]:
-        y = 18
-    for i in range(len(coordinates)):
-        if pos[0] < coordinates[i] and (not i or pos[0] >= coordinates[i - 1]) and not x:
-            x = i
-        if pos[1] <= coordinates[i] and (not i or pos[1] >= coordinates[i - 1]) and not y:
-            y = i
-    return (x, y)
-
-def put_stone(player, screen, pos):
-    stone = pygame.image.load(STONES[player]).convert_alpha()
-    picture = pygame.transform.scale(stone, (STONE_SIZE, STONE_SIZE))
-    pos = (pos[0] - STONE_SIZE // 2, pos[1] - STONE_SIZE // 2)
-    screen.blit(picture, pos)
+import time
+import  textwrap
+from const import SIZE, PANEL_SIZE, SQUARE_SIZE, BACKGROUND
 
 class Board():
     def __init__(self, screen):
@@ -36,7 +11,39 @@ class Board():
         pygame.draw.rect(self.background, (0, 0, 0), self.outline, 3)
         self.outline.inflate_ip(20, 20)
         self.coordinates = []
+        self.panel = pygame.Rect(SQUARE_SIZE * 20, 0, PANEL_SIZE, PANEL_SIZE * 1.5)
+        self.font = pygame.font.SysFont("freemono.tff", 20)
+
         self.make()
+        self.refresh_panel()
+
+        pygame.display.update()
+
+    def refresh_panel(self):
+        pygame.draw.rect(self.screen, (200, 200, 200), self.panel, 0)
+
+    def update_panel(self, hash):
+        self.refresh_panel()
+        text = self.font.render("Hash:", True, (0, 0, 0))
+        self.screen.blit(text, self.panel)
+
+        wrapped = textwrap.fill(hash, 25)
+        for i, t in enumerate(wrapped.split('\n')):
+            text = self.font.render(t, True, (0, 0, 0))
+            self.screen.blit(text, (self.panel[0], self.panel[1] + (i + 1) * 11))
+        
+        pygame.display.update()
+
+    def update_time(self, frame_count):
+        panel_time = pygame.Rect(SQUARE_SIZE * 20, PANEL_SIZE * 1.5, PANEL_SIZE, PANEL_SIZE * 1.5)
+        pygame.draw.rect(self.screen, (200, 200, 200), panel_time, 0)
+        total_seconds = frame_count // 60
+        minutes = total_seconds // 60
+        seconds = total_seconds % 60
+        output_string = "Time: {0:02}:{1:02}".format(minutes, seconds)
+        text = self.font.render(output_string, True, (0,0,0))
+        self.screen.blit(text, panel_time)
+        pygame.display.flip()
 
     def make(self):
         for i in range(18):
@@ -51,6 +58,5 @@ class Board():
             for j in range(3):
                 coords = (SQUARE_SIZE + ((SIZE - SQUARE_SIZE * 2) // 6) + (((SIZE - SQUARE_SIZE * 2) // 3) * i), SQUARE_SIZE + ((SIZE - SQUARE_SIZE * 2) // 6) + (((SIZE - SQUARE_SIZE * 2) // 3) * j))
                 pygame.draw.circle(self.background, (0, 0, 0), coords, SIZE // 110, 0)
-            
+        
         self.screen.blit(self.background, (0, 0))
-        pygame.display.update()
