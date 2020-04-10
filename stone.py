@@ -15,8 +15,9 @@ def get_ajusted_position(coordinates, pos):
             y = i
     return (x, y)
 
-def put_stone(player, screen, pos):
+def put_stone(player, board, pos):
     stone = pygame.image.load(STONES[player - 1]).convert_alpha()
     picture = pygame.transform.scale(stone, (STONE_SIZE, STONE_SIZE))
     pos = (pos[0] - STONE_SIZE // 2, pos[1] - STONE_SIZE // 2)
-    screen.blit(picture, pos)
+    board.screen.blit(picture, pos)
+    pygame.display.update(board.outline)
