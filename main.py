@@ -1,8 +1,12 @@
 import pygame
-from const import SIZE, PANEL_SIZE, BOARD_SIZE, SQUARE_SIZE
+from const import BOARD_SIZE, BOARD_LEN
 from board import Board
-from stone import get_ajusted_position, put_stone
-from minimax import minimax
+from stone import get_ajusted_position
+from game import do_minimax
+
+import os
+os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,0)
+
 
 def main():
     pygame.display.init()
@@ -10,15 +14,15 @@ def main():
     screen = pygame.display.set_mode(BOARD_SIZE, 0, 32)
 
     board = Board(screen)
-    coordinates = board.coordinates
-    matrice = [[0 for _ in range(19)] for _ in range(19)]
+    board.matrice = [[0 for _ in range(BOARD_LEN + 1)] for _ in range(BOARD_LEN + 1)]
 
-    p = 1
     running = True
-
     seconds = 0
     while running:
         pygame.time.wait(5)
+        board.update_time(seconds)
+        seconds += 1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -29,19 +33,10 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
                 if board.outline.collidepoint(pos):
-                    x, y = get_ajusted_position(coordinates, pos)
-                    print(x, y)
-                    if not matrice[y][x]:
-                        put_stone(p, screen, (coordinates[x], coordinates[y]))
-                        matrice[y][x] = p + 1
-                        _hash = minimax(matrice)
-                        board.update_panel(_hash)
-                        p ^= 1
+                    x, y = get_ajusted_position(board.coordinates, pos)
+                    if not board.matrice[y][x]:
+                        do_minimax(board, x, y)
                         seconds = 0
-                    print(matrice)
-        
-        seconds += 1
-        board.update_time(seconds)
     
     pygame.quit()
 

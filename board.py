@@ -1,6 +1,6 @@
 import pygame
 import time
-import  textwrap
+import textwrap
 from const import SIZE, PANEL_SIZE, SQUARE_SIZE, BACKGROUND
 
 class Board():
@@ -11,9 +11,9 @@ class Board():
         pygame.draw.rect(self.background, (0, 0, 0), self.outline, 3)
         self.outline.inflate_ip(20, 20)
         self.coordinates = []
+        self.available_moves = set()
         self.panel = pygame.Rect(SQUARE_SIZE * 20, 0, PANEL_SIZE, PANEL_SIZE * 1.5)
         self.font = pygame.font.SysFont("freemono.tff", 20)
-
         self.make()
         self.refresh_panel()
 
@@ -21,18 +21,6 @@ class Board():
 
     def refresh_panel(self):
         pygame.draw.rect(self.screen, (200, 200, 200), self.panel, 0)
-
-    def update_panel(self, hash):
-        self.refresh_panel()
-        text = self.font.render("Hash:", True, (0, 0, 0))
-        self.screen.blit(text, self.panel)
-
-        wrapped = textwrap.fill(hash, 25)
-        for i, t in enumerate(wrapped.split('\n')):
-            text = self.font.render(t, True, (0, 0, 0))
-            self.screen.blit(text, (self.panel[0], self.panel[1] + (i + 1) * 11))
-        
-        pygame.display.update()
 
     def update_time(self, frame_count):
         panel_time = pygame.Rect(SQUARE_SIZE * 20, PANEL_SIZE * 1.5, PANEL_SIZE, PANEL_SIZE * 1.5)
