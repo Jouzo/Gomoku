@@ -1,5 +1,5 @@
 from const import BOARD_LEN
-from utils import get_available_move
+from utils import get_available_move, get_diagonal
 
 row_scores = {}
 
@@ -25,14 +25,14 @@ def get_row_score(row):
     if row not in row_scores:
         total_row = 0
         i = 0
-        while i < BOARD_LEN + 1:
+        while i < BOARD_LEN:
             if row[i] == 1 or row[i] == 2:
                 p = row[i]
                 open_ends = 2
                 count = 0
-                if i == 0 or i == BOARD_LEN or row[i - 1] == (p ^ 3):
+                if i == 0 or i == BOARD_LEN - 1 or row[i - 1] == (p ^ 3):
                     open_ends -= 1
-                while i < BOARD_LEN + 1 and row[i] == p:
+                while i < BOARD_LEN and row[i] == p:
                     count += 1
                     i += 1
                 if i == BOARD_LEN or row[i] == (p ^ 3):
@@ -51,36 +51,23 @@ def get_total_score(matrice):
     for i in range(BOARD_LEN):
         total += get_row_score(matrice[i])
         total += get_row_score([x[i] for x in matrice])
+        # for x in get_diagonal(matrice, i):
+        #     total += get_row_score(x)
     return total
 
 def minimax(board, matrice, depth, player, alpha, beta):
     if depth == 0:
-        return get_total_score(matrice), 0
-    if player:
-        max_eval = float('-Inf')
-        target = (0,0)
-        for x, y in board.available_moves:
-            m = [row[:] for row in matrice]
-            m[y][x] = 2
-            _eval, _ = minimax(board, m, depth - 1, False, alpha, beta)
-            if _eval > max_eval:
-                max_eval = _eval
-                target = (x, y)
-            alpha = max(alpha, _eval)
-            if alpha >= beta:
-                break
-        return max_eval, target
-    else:
-        min_eval = float('Inf')
-        target = (0,0)
-        for x, y in board.available_moves:
-            m = [row[:] for row in matrice]
-            m[y][x] = 1
-            _eval, _ = minimax(board, m, depth - 1, True, alpha, beta)
-            if _eval < min_eval:
-                min_eval = _eval
-                target = (x, y)
-            beta = max(beta, _eval)
-            if alpha >= beta:
-                break
-        return min_eval, target
+        return (get_total_score(matrice) * 1) if player else (get_total_score(matrice) * -1), 0
+    max_eval = float('-Inf')
+    target = (0,0)
+    for x, y in board.available_moves:
+        m = [row[:] for row in matrice]
+        m[y][x] = 2 if player else 1
+        _eval = -minimax(board, m, depth - 1, bool(player ^ 1), -alpha, -beta)[0]
+        if _eval > max_eval:
+            max_eval = _eval
+            target = (x, y)
+        alpha = max(alpha, _eval)
+        if alpha >= beta:
+            break
+    return max_eval, target

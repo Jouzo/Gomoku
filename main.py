@@ -14,7 +14,7 @@ def main():
     screen = pygame.display.set_mode(BOARD_SIZE, 0, 32)
 
     board = Board(screen)
-    board.matrice = [[0 for _ in range(BOARD_LEN + 1)] for _ in range(BOARD_LEN + 1)]
+    board.matrice = [[0 for _ in range(BOARD_LEN)] for _ in range(BOARD_LEN)]
 
     running = True
     seconds = 0
