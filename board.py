@@ -10,8 +10,8 @@ class Board():
         self.outline = pygame.Rect(SQUARE_SIZE, SQUARE_SIZE, SIZE - SQUARE_SIZE * 2, SIZE - SQUARE_SIZE * 2)
         pygame.draw.rect(self.background, (0, 0, 0), self.outline, 3)
         self.outline.inflate_ip(20, 20)
-        self.coordinates = []
         self.available_moves = set()
+        self.moves = []
         self.panel = pygame.Rect(SQUARE_SIZE * 20, 0, PANEL_SIZE, PANEL_SIZE * 1.5)
         self.font = pygame.font.SysFont("freemono.tff", 20)
         self.make()
@@ -34,6 +34,7 @@ class Board():
         pygame.display.flip()
 
     def make(self):
+        self.coordinates = []
         for i in range(18):
             self.coordinates.append(SQUARE_SIZE + SQUARE_SIZE * i)
             for j in range(18):

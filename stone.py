@@ -20,4 +20,4 @@ def put_stone(player, board, pos):
     picture = pygame.transform.scale(stone, (STONE_SIZE, STONE_SIZE))
     pos = (pos[0] - STONE_SIZE // 2, pos[1] - STONE_SIZE // 2)
     board.screen.blit(picture, pos)
-    pygame.display.update(board.outline)
+    # pygame.display.update(board.outline)

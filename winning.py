@@ -1,5 +1,5 @@
 import pygame
-from const import SIZE, PANEL_SIZE, SQUARE_SIZE, BACKGROUND
+from const import SIZE, PANEL_SIZE, SQUARE_SIZE, BACKGROUND, BOARD_LEN
 from utils import get_move
 
 def update_winning_panel(screen, font, p):
@@ -11,13 +11,16 @@ def update_winning_panel(screen, font, p):
     pygame.display.flip()
 
 def is_winning_move(matrice, pos, player):
-    _len = len(matrice)
     X, Y = pos
     for i in range(8):
         count = 0
         for j in range(1, 5):
             x, y = get_move(X, Y, j, i)
-            if 0 <= x < _len and 0 <= y < _len:
+            if 0 <= x < BOARD_LEN and 0 <= y < BOARD_LEN:
+                if matrice[y][x] == player:
+                    count += 1
+            x, y = get_move(X, Y, -j, i)
+            if 0 <= x < BOARD_LEN and 0 <= y < BOARD_LEN:
                 if matrice[y][x] == player:
                     count += 1
         if count >= 4:
