@@ -9,7 +9,7 @@ from rules import capture
 
 def play_move(board, player, x, y):
     put_stone(player, board, (board.coordinates[x], board.coordinates[y]))
-    if is_winning_move(board.matrice, (x, y), player):
+    if is_winning_move(board.matrice, (x, y), player) or board.stones[str(-player)] <= 0:
         update_winning_panel(board.screen, board.font, player)
         time.sleep(3)
         pygame.quit()
@@ -23,17 +23,19 @@ def remove_move(board, captures):
     for x, y, p in captures:
         board.moves.remove((x, y, p))
         board.matrice[y][x] = 0
+        board.stones[str(p)] -= 1
     for x, y, p in board.moves:
         put_stone(p, board, (board.coordinates[x], board.coordinates[y]))
     pygame.display.update(board.outline)
 
 def play(board, x, y, player):
-    play_move(board, player, x, y)
-    board.available_moves.discard((x, y))
-
     c = capture(board.matrice, player, x, y)
     if len(c):
         remove_move(board, c)
+    
+    play_move(board, player, x, y)
+    board.available_moves.discard((x, y))
+
 
 def do_minimax(board, x, y):
     play(board, x, y, 1)
