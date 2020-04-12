@@ -25,18 +25,18 @@ def get_row_score(row):
         total_row = 0
         i = 0
         while i < BOARD_LEN:
-            if row[i] == 1 or row[i] == 2:
-                p = row[i]
+            if row[i] == 1 or row[i] == -1:
+                player = row[i]
                 open_ends = 2
                 count = 0
-                if i == 0 or i == BOARD_LEN - 1 or row[i - 1] == (p ^ 3):
+                if i == 0 or i == BOARD_LEN - 1 or row[i - 1] == -player:
                     open_ends -= 1
-                while i < BOARD_LEN and row[i] == p:
+                while i < BOARD_LEN and row[i] == player:
                     count += 1
                     i += 1
-                if i == BOARD_LEN or row[i] == (p ^ 3):
+                if i == BOARD_LEN or row[i] == -player:
                     open_ends -= 1
-                total_row += get_score(count, open_ends, 1 if p == 2 else -1)
+                total_row += get_score(count, open_ends, -player)
             else:
                 i += 1
         row_scores[row] = total_row

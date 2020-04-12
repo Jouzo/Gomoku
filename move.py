@@ -9,7 +9,7 @@ from utils import get_move
 def sort_moves(matrice, moves, player):
     ret = []
     for x, y in moves:
-        matrice[y][x] = 2 if player else 1
+        matrice[y][x] = player
         c = capture(matrice, player, x, y)
         if len(c):
             for X, Y, _ in c:

@@ -5,25 +5,26 @@ from rules import capture
 
 def minimax(board, matrice, depth, player, alpha, beta):
     if depth == 0:
-        return (get_total_score(matrice) * 1) if player else (get_total_score(matrice) * -1), 0
+        return get_total_score(matrice) * -1, 0
     max_eval = float('-Inf')
     target = (0,0)
     
     if depth == 3:
-        moves = sort_moves(matrice, board.available_moves, True)
+        moves = sort_moves(matrice, board.available_moves, player)
     else:
         moves = board.available_moves
 
     for x, y in moves:
         m = [row[:] for row in matrice]
-        m[y][x] = 2 if player else 1
+        m[y][x] = player
         
-        c = capture(matrice, player, x, y)
+        c = capture(m, player, x, y)
         if len(c):
             for X, Y, _ in c:
                 m[Y][X] = 0
 
-        _eval = -minimax(board, m, depth - 1, bool(player ^ 1), -alpha, -beta)[0]
+        _eval = -minimax(board, m, depth - 1, -player, -alpha, -beta)[0]
+       
         if _eval > max_eval:
             max_eval = _eval
             target = (x, y)

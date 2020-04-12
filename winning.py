@@ -2,10 +2,10 @@ import pygame
 from const import SIZE, PANEL_SIZE, SQUARE_SIZE, BACKGROUND, BOARD_LEN
 from utils import get_move
 
-def update_winning_panel(screen, font, p):
+def update_winning_panel(screen, font, player):
     panel_time = pygame.Rect(SQUARE_SIZE * 20, PANEL_SIZE * 2.0, PANEL_SIZE, PANEL_SIZE * 1)
     pygame.draw.rect(screen, (200, 200, 200), panel_time, 0)
-    output_string = "PLAYER: {0} HAS WON !".format(p)
+    output_string = "PLAYER: {0} HAS WON !".format(1 if player == 1 else 2)
     text = font.render(output_string, True, (0,0,0))
     screen.blit(text, panel_time)
     pygame.display.flip()

@@ -7,15 +7,15 @@ from stone import put_stone
 from minimax import minimax, get_total_score
 from rules import capture
 
-def play_move(board, p, x, y):
-    put_stone(p, board, (board.coordinates[x], board.coordinates[y]))
-    if is_winning_move(board.matrice, (x, y), p):
-        update_winning_panel(board.screen, board.font, p)
+def play_move(board, player, x, y):
+    put_stone(player, board, (board.coordinates[x], board.coordinates[y]))
+    if is_winning_move(board.matrice, (x, y), player):
+        update_winning_panel(board.screen, board.font, player)
         time.sleep(3)
         pygame.quit()
         exit(0)
-    board.matrice[y][x] = p
-    board.moves.append((x, y, p))
+    board.matrice[y][x] = player
+    board.moves.append((x, y, player))
     pygame.display.update(board.outline)
 
 def remove_move(board, captures):
@@ -27,16 +27,16 @@ def remove_move(board, captures):
         put_stone(p, board, (board.coordinates[x], board.coordinates[y]))
     pygame.display.update(board.outline)
 
-def play(board, x, y, p):
-    play_move(board, p, x, y)
+def play(board, x, y, player):
+    play_move(board, player, x, y)
     board.available_moves.discard((x, y))
 
-    c = capture(board.matrice, p, x, y)
+    c = capture(board.matrice, player, x, y)
     if len(c):
         remove_move(board, c)
 
 def do_minimax(board, x, y):
     play(board, x, y, 1)
     board.available_moves.update(get_available_move(board.matrice))
-    _, (x, y) = minimax(board, board.matrice, 3, True, float('-Inf'), float('Inf'))
-    play(board, x, y, 2)
+    _, (x, y) = minimax(board, board.matrice, 3, -1, float('-Inf'), float('Inf'))
+    play(board, x, y, -1)
