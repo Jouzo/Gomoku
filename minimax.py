@@ -18,7 +18,7 @@ def minimax(board, matrice, depth, player, alpha, beta):
         m = [row[:] for row in matrice]
         m[y][x] = player
         
-        c = capture(m, player, x, y)
+        c = capture(m, x, y, player)
         if len(c):
             for X, Y, _ in c:
                 m[Y][X] = 0

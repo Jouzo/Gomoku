@@ -24,6 +24,14 @@ class Board():
     def refresh_panel(self):
         pygame.draw.rect(self.screen, (200, 200, 200), self.panel, 0)
 
+    def wrong_move(self):
+        panel_time = pygame.Rect(SQUARE_SIZE * 20, PANEL_SIZE, PANEL_SIZE, PANEL_SIZE * 1.5)
+        pygame.draw.rect(self.screen, (200, 200, 200), panel_time, 0)
+        output_string = "Illegal move !"
+        text = self.font.render(output_string, True, (0,0,0))
+        self.screen.blit(text, panel_time)
+        pygame.display.flip()
+
     def update_time(self, frame_count):
         panel_time = pygame.Rect(SQUARE_SIZE * 20, PANEL_SIZE * 1.5, PANEL_SIZE, PANEL_SIZE * 1.5)
         pygame.draw.rect(self.screen, (200, 200, 200), panel_time, 0)

@@ -10,7 +10,7 @@ def sort_moves(matrice, moves, player):
     ret = []
     for x, y in moves:
         matrice[y][x] = player
-        c = capture(matrice, player, x, y)
+        c = capture(matrice, x, y, player)
         if len(c):
             for X, Y, _ in c:
                 matrice[Y][X] = 0

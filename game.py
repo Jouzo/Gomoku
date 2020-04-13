@@ -5,7 +5,7 @@ from winning import is_winning_move, update_winning_panel
 from move import get_available_move
 from stone import put_stone
 from minimax import minimax, get_total_score
-from rules import capture
+from rules import capture, self_capture
 
 def play_move(board, player, x, y):
     put_stone(player, board, (board.coordinates[x], board.coordinates[y]))
@@ -28,17 +28,29 @@ def remove_move(board, captures):
         put_stone(p, board, (board.coordinates[x], board.coordinates[y]))
     pygame.display.update(board.outline)
 
+def check_move(board, x, y, player):
+    if self_capture(board.matrice, x, y, player):
+        return False
+    else:
+        return True
+
 def play(board, x, y, player):
-    c = capture(board.matrice, player, x, y)
-    if len(c):
-        remove_move(board, c)
-    
-    play_move(board, player, x, y)
-    board.available_moves.discard((x, y))
+    if check_move(board, x, y, player):
+        c = capture(board.matrice, x, y, player)
+        if len(c):
+            remove_move(board, c)
+        
+        play_move(board, player, x, y)
+        board.available_moves.discard((x, y))
+        return True
+    else:
+        return False
 
 
 def do_minimax(board, x, y):
-    play(board, x, y, 1)
-    board.available_moves.update(get_available_move(board.matrice))
-    _, (x, y) = minimax(board, board.matrice, 3, -1, float('-Inf'), float('Inf'))
-    play(board, x, y, -1)
+    if play(board, x, y, 1):
+        board.available_moves.update(get_available_move(board.matrice))
+        _, (x, y) = minimax(board, board.matrice, 3, -1, float('-Inf'), float('Inf'))
+        play(board, x, y, -1)
+    else:
+        board.wrong_move()
