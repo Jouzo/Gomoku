@@ -14,7 +14,6 @@ def main():
     screen = pygame.display.set_mode(BOARD_SIZE, 0, 32)
 
     board = Board(screen)
-    board.matrice = [[0 for _ in range(BOARD_LEN)] for _ in range(BOARD_LEN)]
 
     running = True
     seconds = 0
@@ -34,7 +33,7 @@ def main():
                 pos = pygame.mouse.get_pos()
                 if board.outline.collidepoint(pos):
                     x, y = get_ajusted_position(board.coordinates, pos)
-                    if not board.matrice[y][x]:
+                    if (x, y, 1) not in board.moves and (x, y, -1) not in board.moves:
                         do_minimax(board, x, y)
                         seconds = 0
     

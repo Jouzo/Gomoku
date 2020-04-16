@@ -1,4 +1,4 @@
-SIZE = 820
+SIZE = 620
 PANEL_SIZE = SIZE // 3
 BOARD_SIZE = (SIZE + PANEL_SIZE, SIZE)
 BOARD_LEN = 19
@@ -9,3 +9,5 @@ BACKGROUND = 'img/goban.jpg'
 
 STONE_SIZE = SIZE // 23
 STONES = ["img/white_stone.png", "img/black_stone.png"]
+
+CAPTURE_SCORE = {'0': 0, '2': 4, '4': 7, '6': 14, '8': 25, '10': float('Inf') }
